@@ -119,6 +119,7 @@ extension PresentationLinkTransition {
         public var shouldAutomaticallyDismissPresentedView: Bool
         public var modalPresentationCapturesStatusBarAppearance: Bool
         public var preferredPresentationBackgroundColor: Color?
+        public var tracksContentSize: Bool
 
         public init(
             isInteractive: Bool = true,
@@ -126,7 +127,8 @@ extension PresentationLinkTransition {
             shouldAutomaticallyDismissDestination: Bool = true,
             shouldAutomaticallyDismissPresentedView: Bool = true,
             modalPresentationCapturesStatusBarAppearance: Bool = false,
-            preferredPresentationBackgroundColor: Color? = nil
+            preferredPresentationBackgroundColor: Color? = nil,
+            tracksContentSize: Bool  = false
         ) {
             self.isInteractive = isInteractive
             self.isDestinationReusable = isDestinationReusable
@@ -134,6 +136,7 @@ extension PresentationLinkTransition {
             self.shouldAutomaticallyDismissPresentedView = shouldAutomaticallyDismissPresentedView
             self.modalPresentationCapturesStatusBarAppearance = modalPresentationCapturesStatusBarAppearance
             self.preferredPresentationBackgroundColor = preferredPresentationBackgroundColor
+            self.tracksContentSize = tracksContentSize
         }
 
         var preferredPresentationBackgroundUIColor: UIColor? {
@@ -440,8 +443,9 @@ extension PresentationLinkTransition {
         public var prefersScrollingExpandsWhenScrolledToEdge: Bool
         public var prefersEdgeAttachedInCompactHeight: Bool
         public var widthFollowsPreferredContentSizeWhenEdgeAttached: Bool
+        public var sheetPresentationType: UIPresentationController.Type?
 
-        public init(
+        public init<T: UIPresentationController>(
             selected: Binding<SheetTransitionOptions.Detent.Identifier?>? = nil,
             detents: [SheetTransitionOptions.Detent]? = nil,
             largestUndimmedDetentIdentifier: SheetTransitionOptions.Detent.Identifier? = nil,
@@ -452,9 +456,11 @@ extension PresentationLinkTransition {
             prefersScrollingExpandsWhenScrolledToEdge: Bool = true,
             prefersEdgeAttachedInCompactHeight: Bool = false,
             widthFollowsPreferredContentSizeWhenEdgeAttached: Bool = false,
+            sheetPresentationType: T.Type? = nil,
             options: Options = .init()
         ) {
             self.options = options
+            self.sheetPresentationType = sheetPresentationType
             if let isInteractive {
                 self.options.isInteractive = isInteractive
             }

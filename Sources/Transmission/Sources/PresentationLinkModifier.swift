@@ -871,10 +871,23 @@ private struct PresentationLinkModifierBody<
                     presentationController.largestUndimmedDetentIdentifier = configuration.largestUndimmedDetentIdentifier
                     return presentationController
                     #else
-                    let presentationController = SheetPresentationController(
-                        presentedViewController: presented,
-                        presenting: presenting
-                    )
+                    
+                    var presentationController: UISheetPresentationController
+                    
+                    if let sheetType = configuration.sheetPresentationType,
+                       let sheetClass = sheetType as? UISheetPresentationController.Type {
+                        presentationController = sheetClass.init(
+                            presentedViewController: presented,
+                            presenting: presenting
+                        )
+                    } else {
+                        presentationController = SheetPresentationController(
+                            presentedViewController: presented,
+                            presenting: presenting
+                        )
+                    }
+                    
+                    
                     presentationController.detents = configuration.detents.map {
                         $0.toUIKit(in: presentationController)
                     }
@@ -888,7 +901,7 @@ private struct PresentationLinkModifierBody<
                     if configuration.prefersSourceViewAlignment {
                         presentationController.sourceView = sourceView
                     }
-                    presentationController.preferredBackgroundColor = configuration.options.preferredPresentationBackgroundUIColor
+//                    presentationController.preferredBackgroundColor = configuration.options.preferredPresentationBackgroundUIColor
                     presentationController.overrideTraitCollection = overrideTraitCollection
                     presentationController.delegate = self
                     return presentationController
@@ -1313,7 +1326,7 @@ extension PresentationLinkTransition.Value {
             viewController.tracksContentSize = true
 
         default:
-            break
+            viewController.tracksContentSize = options.tracksContentSize
         }
     }
 }
